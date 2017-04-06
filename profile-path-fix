@@ -1,0 +1,29 @@
+#!/bin/bash
+
+install_dir="$(swift-install-dir)"
+rc=$?
+
+[ $rc -ne 0 ] && exit $rc
+
+for dir in "$install-dir" \
+           "$HOME/workspace/swift/bin"
+do
+    (
+        printf "\n"
+        printf "if [ -d \"%s\" ] ; then\n" "$dir"
+        printf "    PATH=\"%s:\$PATH\"\n" "$dir"
+        printf "fi\n"
+    ) >>"$HOME/.profile"
+done
+
+for dir in "/usr/local/lib/x86_64-linux-gnu"
+do
+    (
+        printf "\n"
+        printf "if [ -d \"%s\" ] ; then\n" "$dir"
+        printf "    export LD_LIBRARY_PATH=\"%s:\$LD_LIBRARY_PATH\"\n" "$dir"
+        printf "fi\n"
+    ) >>"$HOME/.profile"
+done
+
+exit 0

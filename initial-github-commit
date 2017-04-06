@@ -1,0 +1,27 @@
+#!/bin/bash
+
+github_url="https://github.com"
+github_username="itssofluffy"
+dir_name="$(basename "$(pwd)")"
+repository_name="$(printf "$dir_name" | cut -d"." -f1)"
+repository_branch="$(printf "$dir_name" | cut -d"." -f2)"
+[ -z "$repository_branch" -o "$repository_name" = "$repository_branch" ] && repository_branch="master"
+
+if [[ -d ".git" ]] ; then
+    printf "error : '.git' directory already exists.\n" >&2
+    exit 1
+fi
+
+(
+    printf "make the repository '$repository_name' on '$github_url' for user account '$github_username'.\n\n"
+    printf "Hit <Return> to continue "
+) >&1
+read ans <&1
+
+git init
+[[ $? -eq 0 ]] && git add .
+[[ $? -eq 0 ]] && git commit -m "Initial github commit"
+[[ $? -eq 0 ]] && git remote add origin "$github_url/$github_username/${repository_name}.git"
+[[ $? -eq 0 ]] && git push -u origin "$repository_branch" --tags
+
+exit 0

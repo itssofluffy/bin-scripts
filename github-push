@@ -1,0 +1,15 @@
+#!/bin/bash -x
+
+dir_name="$(basename "$(pwd)")"
+repository_name="$(printf "$dir_name" | cut -d"." -f1)"
+repository_branch="$(printf "$dir_name" | cut -d"." -f2)"
+[ -z "$repository_branch" -o "$repository_name" = "$repository_branch" ] && repository_branch="master"
+
+if [ ! -d ".git" ] ; then
+    printf "error : '.git' directory does not exist.\n" >&2
+    exit 1
+fi
+
+git push -u origin "$repository_branch" --tags
+
+exit 0

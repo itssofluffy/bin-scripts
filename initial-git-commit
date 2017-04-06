@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -d ".git" ] ; then
+    printf "initial git commit aborted, '.git' directory already exists.\n" >&1
+    exit 1
+fi
+
+git init
+[ $? -eq 0 ] && git add .
+[ $? -eq 0 ] && git commit -m "Initial Import"
+[ $? -eq 0 ] && git tag 0.0.1
+
+exit 0

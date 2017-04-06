@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ $(id -u) -ne 0 ] ; then
+    printf "you must be a superuser.\n" >&2
+    exit 1
+elif [ "$(uname -i)" != 'x86_64' ] ; then
+    printf "not an x86_64 platform.\n" >&2
+    exit 2
+fi
+
+download_dir="$(pwd)"
+gz_file="swift-3.0-RELEASE-ubuntu14.04.tar.gz"
+install_dir="/opt/swift/swift-3.0"
+
+wget "https://swift.org/builds/swift-3.0-release/ubuntu1404/swift-3.0-RELEASE/$gz_file"
+
+[ ! -d "$install_dir" ] && mkdir --parents "$install_dir"
+cd "$install_dir" && tar -xzf "$download_dir/$gz_file"
+
+chmod -R o+r "$install_dir" # need this for swift-3.0-RELEASE-ubuntu14.04 otherwise we get compiler errors!!!
+
+apt-get update
+
+apt-get install -y libicu-dev clang-3.6
+
+update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.6 100
+update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 100
+
+exit 0

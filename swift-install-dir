@@ -1,0 +1,19 @@
+#!/bin/bash
+
+install_dir="$(dirname "$(whereis swift | awk '{print $2}')")"
+
+if [ -z "$install_dir" -o "$install_dir" = '.' ] ; then
+    case "$(uname -i)" in
+        armv7l) install_dir="/opt/swift/swift-3.0/usr/bin";;
+        *)      install_dir="/opt/swift/swift-3.0/swift-3.0-RELEASE-ubuntu14.04/usr/bin";;
+    esac
+fi
+
+if [ ! -d "$install_dir" ] ; then
+    printf "unable to determine swift installation directory."
+    exit 1
+fi
+
+echo "$install_dir"
+
+exit 0

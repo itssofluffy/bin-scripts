@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ $(id -u) -ne 0 ] ; then
+    printf "you must be a superuser.\n" >&2
+    exit 1
+fi
+
+attr='SUBSYSTEM=="net", ACTION=="add", DRIVERS=="smsc95xx", ATTR{address}=="*", ATTR{dev_id}=="0x0", ATTR{type}=="1", KERNEL=="eth*", NAME="eth0"'
+sys_file="/etc/udev/rules.d/70-persistent-net.rules"
+
+grep "^SUBSYSTEM==\"net\"" \
+     "$sys_file" 1>/dev/null \
+                 2>/dev/null
+[ $? -ne 0 ] && printf "$attr\n" >"$sys_file"
+
+exit 0

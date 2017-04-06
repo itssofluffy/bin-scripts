@@ -1,0 +1,5 @@
+#!/bin/bash
+
+git tag | sort -V | tail -1
+
+exit 0

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+cd "$HOME"
+
+mkdir -p \
+      $HOME/.vim/autoload \
+      $HOME/.vim/bundle 2>/dev/null
+
+pathogen_vim="pathogen.vim"
+pathogen_file="$HOME/.vim/autoload/$pathogen_vim"
+[ -f "$pathogen_file" ] && rm "$pathogen_file"
+
+curl -LSso \
+     $pathogen_file \
+     https://tpo.pe/$pathogen_vim
+
+grep "^execute pathogen" $HOME/.vimrc 1>/dev/null \
+                                      2>/dev/null
+if [ $? -ne 0 ] ; then
+    (
+        printf "execute pathogen#infect()\n"
+        printf "syntax on\n"
+        printf "filetype plugin indent on\n"
+    ) >$HOME/.vimrc
+fi
+
+git clone https://github.com/apple/swift
+
+cp -r swift/utils/vim $HOME/.vim/bundle
+
+rm -r swift
+
+cd "$HOME"
+
+exit 0
